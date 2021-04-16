@@ -1,0 +1,1 @@
+alter table wash add column status varchar(30);
