@@ -1,8 +1,6 @@
 package com.elsief.washingmachineservice.service;
 
-import com.elsief.washingmachineservice.entity.Appliance;
 import com.elsief.washingmachineservice.entity.Wash;
-import com.elsief.washingmachineservice.enums.ApplianceStatus;
 import com.elsief.washingmachineservice.enums.WashStatus;
 import com.elsief.washingmachineservice.repository.WashRepo;
 import javassist.NotFoundException;
@@ -15,17 +13,14 @@ import java.util.Optional;
 @Service
 public class WashService {
     private final WashRepo washRepo;
-    private final WashExecutor washExecutor;
 
     @Autowired
-    public WashService(WashRepo washRepo, WashExecutor washExecutor) {
+    public WashService(WashRepo washRepo) {
         this.washRepo = washRepo;
-        this.washExecutor = washExecutor;
     }
 
     public Wash create(Wash wash) {
         Wash createdWash = washRepo.save(wash);
-        washExecutor.startWashing(createdWash);
         return createdWash;
     }
 

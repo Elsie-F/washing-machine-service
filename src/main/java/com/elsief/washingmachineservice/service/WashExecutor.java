@@ -22,11 +22,12 @@ public class WashExecutor {
     private static final Map<String, ScheduledExecutorService> executorServiceMap = new ConcurrentHashMap<>();
 
     private final ApplianceService applianceService;
-    // private final WashService washService;
+    private final WashService washService;
 
     @Autowired
-    public WashExecutor(ApplianceService applianceService) {
+    public WashExecutor(ApplianceService applianceService, WashService washService) {
         this.applianceService = applianceService;
+        this.washService = washService;
     }
 
     public void startWashing(Wash wash) {
@@ -60,23 +61,23 @@ public class WashExecutor {
                     //log.info("Preparing to wash...");
                     System.out.println("Preparing to execute wash with id " + washId);
                     applianceService.setApplianceStatus(applianceId, ApplianceStatus.RUNNING);
-                    // washService.setWashStatus(washId, WashStatus.RUNNING);
+                    washService.setWashStatus(washId, WashStatus.RUNNING);
 
                     TimeUnit.MINUTES.sleep(wash.getProgram().getDurationInMinutes());
 
-                    // washService.setWashFinishTime(washId, LocalDateTime.now());
-                    // washService.setWashStatus(washId, WashStatus.FINISHED);
+                    washService.setWashFinishTime(washId, LocalDateTime.now());
+                    washService.setWashStatus(washId, WashStatus.FINISHED);
                     applianceService.setApplianceStatus(applianceId, ApplianceStatus.IDLE);
                     //log.info("Wash finished");
                     System.out.println("Wash with id " + washId + " finished");
 
                 } catch (InterruptedException e) {
                     log.error("Wash interrupted", e);
-//                    try {
-//                        washService.setWashStatus(washId, WashStatus.INTERRUPTED);
-//                    } catch (NotFoundException ex) {
-//                        log.error("Could not update wash status", ex);
-//                    }
+                    try {
+                        washService.setWashStatus(washId, WashStatus.INTERRUPTED);
+                    } catch (NotFoundException ex) {
+                        log.error("Could not update wash status", ex);
+                    }
                 } catch (NotFoundException e) {
                     log.error("Could not execute wash: appliance with id " + applianceId + " not found", e);
                 }

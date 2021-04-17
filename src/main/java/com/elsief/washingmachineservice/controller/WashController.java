@@ -9,6 +9,7 @@ import com.elsief.washingmachineservice.enums.WashStatus;
 import com.elsief.washingmachineservice.repository.WashRepo;
 import com.elsief.washingmachineservice.service.ApplianceService;
 import com.elsief.washingmachineservice.service.ProgramService;
+import com.elsief.washingmachineservice.service.WashExecutor;
 import com.elsief.washingmachineservice.service.WashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +26,15 @@ public class WashController {
     private final WashService washService;
     private final ApplianceService applianceService;
     private final ProgramService programService;
+    private final WashExecutor washExecutor;
 
     @Autowired
-    public WashController(WashRepo washRepo, WashService washService, ApplianceService applianceService, ProgramService programService) {
+    public WashController(WashRepo washRepo, WashService washService, ApplianceService applianceService, ProgramService programService, WashExecutor washExecutor) {
         this.washRepo = washRepo;
         this.washService = washService;
         this.applianceService = applianceService;
         this.programService = programService;
+        this.washExecutor = washExecutor;
     }
 
     @GetMapping("/all")
@@ -56,6 +59,8 @@ public class WashController {
                 //.finishTime(request.getStartTime().plusMinutes(program.get().getDurationInMinutes()))
                 .status(WashStatus.WAITING)
                 .build());
+
+        washExecutor.startWashing(createdWash);
         return CreateWashResponse.builder().washId(createdWash.getId()).httpStatus(HttpStatus.CREATED).message("Wash successfully created").build();
     }
 
