@@ -41,4 +41,12 @@ public class WashService {
         wash.get().setFinishTime(finishTime);
         return washRepo.save(wash.get());
     }
+
+    public WashStatus getWashStatus(long washId) throws NotFoundException {
+        Optional<Wash> wash = washRepo.findById(washId);
+        if (wash.isEmpty()) {
+            throw new NotFoundException("Wash with id " + washId + " not found");
+        }
+        return wash.get().getStatus();
+    }
 }

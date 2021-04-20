@@ -30,4 +30,12 @@ public class ApplianceService {
         appliance.get().setStatus(status);
         return applianceRepo.save(appliance.get());
     }
+
+    public ApplianceStatus getApplianceStatus(long applianceId) throws NotFoundException {
+        Optional<Appliance> appliance = applianceRepo.findById(applianceId);
+        if (appliance.isEmpty()) {
+            throw new NotFoundException("Wash with id " + applianceId + " not found");
+        }
+        return appliance.get().getStatus();
+    }
 }

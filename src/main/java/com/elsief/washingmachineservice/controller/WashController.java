@@ -7,10 +7,7 @@ import com.elsief.washingmachineservice.entity.Program;
 import com.elsief.washingmachineservice.entity.Wash;
 import com.elsief.washingmachineservice.enums.WashStatus;
 import com.elsief.washingmachineservice.repository.WashRepo;
-import com.elsief.washingmachineservice.service.ApplianceService;
-import com.elsief.washingmachineservice.service.ProgramService;
-import com.elsief.washingmachineservice.service.WashExecutor;
-import com.elsief.washingmachineservice.service.WashService;
+import com.elsief.washingmachineservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +23,15 @@ public class WashController {
     private final WashService washService;
     private final ApplianceService applianceService;
     private final ProgramService programService;
-    private final WashExecutor washExecutor;
+    private final ScheduleService scheduleService;
 
     @Autowired
-    public WashController(WashRepo washRepo, WashService washService, ApplianceService applianceService, ProgramService programService, WashExecutor washExecutor) {
+    public WashController(WashRepo washRepo, WashService washService, ApplianceService applianceService, ProgramService programService, ScheduleService scheduleService) {
         this.washRepo = washRepo;
         this.washService = washService;
         this.applianceService = applianceService;
         this.programService = programService;
-        this.washExecutor = washExecutor;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping("/all")
@@ -56,11 +53,11 @@ public class WashController {
                 .appliance(appliance.get())
                 .program(program.get())
                 .startTime(request.getStartTime())
-                //.finishTime(request.getStartTime().plusMinutes(program.get().getDurationInMinutes()))
                 .status(WashStatus.WAITING)
                 .build());
 
-        washExecutor.startWashing(createdWash);
+        scheduleService.scheduleStart(createdWash);
+        scheduleService.scheduleFinish(createdWash);
         return CreateWashResponse.builder().washId(createdWash.getId()).httpStatus(HttpStatus.CREATED).message("Wash successfully created").build();
     }
 
