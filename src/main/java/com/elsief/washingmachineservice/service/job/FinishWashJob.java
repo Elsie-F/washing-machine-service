@@ -32,24 +32,26 @@ public class FinishWashJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         try {
             WashStatus washStatus = washService.getWashStatus(washId);
-            if (!WashStatus.CANCELED.equals(washStatus) && cancelingWash) {
+            if (cancelingWash && !WashStatus.CANCELED.equals(washStatus) && !WashStatus.FINISHED.equals(washStatus)) {
+                if (WashStatus.RUNNING.equals(washStatus)) {
+                    washService.setWashFinishTime(washId, LocalDateTime.now());
+                    applianceService.setApplianceStatus(applianceId, ApplianceStatus.IDLE);
+                }
                 washService.setWashStatus(washId, WashStatus.CANCELED);
                 System.out.println("Wash with id " + washId + " canceled");
+
             } else {
                 if (WashStatus.RUNNING.equals(washStatus)) {
-                    ApplianceStatus applianceStatus = applianceService.getApplianceStatus(applianceId);
-                    if (ApplianceStatus.RUNNING.equals(applianceStatus)) {
-                        try {
-                            washService.setWashFinishTime(washId, LocalDateTime.now());
-                            washService.setWashStatus(washId, WashStatus.FINISHED);
-                            //log.info("Wash finished");
-                            System.out.println("Wash with id " + washId + " finished");
+                    try {
+                        washService.setWashFinishTime(washId, LocalDateTime.now());
+                        washService.setWashStatus(washId, WashStatus.FINISHED);
+                        //log.info("Wash finished");
+                        System.out.println("Wash with id " + washId + " finished");
 
-                            applianceService.setApplianceStatus(applianceId, ApplianceStatus.IDLE);
+                        applianceService.setApplianceStatus(applianceId, ApplianceStatus.IDLE);
 
-                        } catch (NotFoundException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (NotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
             }

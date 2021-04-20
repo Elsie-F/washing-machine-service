@@ -86,14 +86,13 @@ public class ScheduleService {
 
     }
 
-    public void cancelWash(Wash wash) {
-        long washId = wash.getId();
+    public void cancelWash(long washId) {
         try {
             scheduler.deleteJob(JobKey.jobKey("wash" + washId, "start"));
             JobDetail oldJob = scheduler.getJobDetail(JobKey.jobKey("wash" + washId, "finish"));
             JobBuilder jb = oldJob.getJobBuilder();
             JobDetail newJob = jb.usingJobData("cancelingWash", true).build();
-            scheduler.addJob(newJob, true);
+            scheduler.addJob(newJob, true, true);
 
             Trigger oldTrigger = scheduler.getTrigger(triggerKey("washTrigger" + washId, "finish"));
             TriggerBuilder tb = oldTrigger.getTriggerBuilder();
@@ -101,6 +100,7 @@ public class ScheduleService {
             scheduler.rescheduleJob(oldTrigger.getKey(), newTrigger);
         } catch (SchedulerException e) {
             log.error("Error while canceling wash with id " + washId, e);
+            System.out.println("Error while canceling wash with id " + washId);
         }
 
     }

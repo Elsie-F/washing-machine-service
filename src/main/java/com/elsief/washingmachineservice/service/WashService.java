@@ -24,6 +24,10 @@ public class WashService {
         return createdWash;
     }
 
+    public Optional<Wash> findById(long washId) {
+        return washRepo.findById(washId);
+    }
+
     public Wash setWashStatus(long washId, WashStatus status) throws NotFoundException {
         Optional<Wash> wash = washRepo.findById(washId);
         if (wash.isEmpty()) {

@@ -2,6 +2,7 @@ package com.elsief.washingmachineservice.controller;
 
 import com.elsief.washingmachineservice.api.CreateWashRequest;
 import com.elsief.washingmachineservice.api.CreateWashResponse;
+import com.elsief.washingmachineservice.api.CancelWashResponse;
 import com.elsief.washingmachineservice.entity.Appliance;
 import com.elsief.washingmachineservice.entity.Program;
 import com.elsief.washingmachineservice.entity.Wash;
@@ -59,6 +60,16 @@ public class WashController {
         scheduleService.scheduleStart(createdWash);
         scheduleService.scheduleFinish(createdWash);
         return CreateWashResponse.builder().washId(createdWash.getId()).httpStatus(HttpStatus.CREATED).message("Wash successfully created").build();
+    }
+
+    @PostMapping("/cancel/{washId}")
+    public CancelWashResponse cancelWash(@PathVariable long washId) {
+        Optional<Wash> wash = washService.findById(washId);
+        if (wash.isEmpty()) {
+            return CancelWashResponse.builder().httpStatus(HttpStatus.NOT_FOUND).message("Wash with id " + washId + " not found").build();
+        }
+        scheduleService.cancelWash(wash.get().getId());
+        return CancelWashResponse.builder().washId(washId).httpStatus(HttpStatus.OK).message("Wash with id " + washId + " canceled").build();
     }
 
 }
