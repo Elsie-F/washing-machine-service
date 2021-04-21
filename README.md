@@ -1,11 +1,11 @@
 #### Test assignment
-A backend service with REST API to control washing machine.
+A backend service with REST API to control washing machine. It requires postgresql database named "washingdb" to be created at user home folder and Maven & JDK 11 to be installed.
 
-To run this application install Maven and JDK 11, then move to the project directory and run:
+To run this application, move to the project directory and run:
 
 `$ mvn package`
 
-`$ java -jar java -jar washing-machine-service-0.0.1-SNAPSHOT.jar`
+`$ java -jar washing-machine-service-0.0.1-SNAPSHOT.jar`
 
 To invoke REST API you can use, e.g., curl or Postman. Here is the list of endpoints:
 
