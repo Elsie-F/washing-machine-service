@@ -100,7 +100,6 @@ public class ScheduleService {
             scheduler.rescheduleJob(oldTrigger.getKey(), newTrigger);
         } catch (SchedulerException e) {
             log.error("Error while canceling wash with id " + washId, e);
-            System.out.println("Error while canceling wash with id " + washId);
         }
 
     }

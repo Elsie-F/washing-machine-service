@@ -6,11 +6,13 @@ import com.elsief.washingmachineservice.service.ApplianceService;
 import com.elsief.washingmachineservice.service.WashService;
 import javassist.NotFoundException;
 import lombok.Setter;
+import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class StartWashJob implements Job {
+    private static final Logger log = Logger.getLogger(StartWashJob.class);
 
     @Setter
     private long washId;
@@ -33,21 +35,20 @@ public class StartWashJob implements Job {
                 ApplianceStatus applianceStatus = applianceService.getApplianceStatus(applianceId);
                 if (ApplianceStatus.IDLE.equals(applianceStatus)) {
                     try {
-                        //log.info("Preparing to wash...");
-                        System.out.println("Preparing to execute wash with id " + washId);
+                        log.info("Preparing to execute wash with id " + washId);
                         applianceService.setApplianceStatus(applianceId, ApplianceStatus.RUNNING);
                         washService.setWashStatus(washId, WashStatus.RUNNING);
 
                     } catch (NotFoundException e) {
-                        e.printStackTrace();
+                        log.error("Could not perform update while starting wash with id " + washId, e);
                     }
                 } else {
                     washService.setWashStatus(washId, WashStatus.CANCELED);
-                    System.out.println("Wash with id " + washId + " canceled: appliance with id " + applianceId + " is already running");
+                    log.info("Wash with id " + washId + " canceled: appliance with id " + applianceId + " is already running");
                 }
             }
         } catch (NotFoundException e) {
-            e.printStackTrace();
+            log.error("Could not perform update while starting wash with id " + washId, e);
         }
     }
 }
