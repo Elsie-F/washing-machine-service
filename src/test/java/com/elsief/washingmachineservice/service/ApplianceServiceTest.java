@@ -7,6 +7,7 @@ import javassist.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -57,8 +58,9 @@ public class ApplianceServiceTest {
         Appliance actualAppliance = applianceService.setApplianceStatus(1L, ApplianceStatus.RUNNING);
         assertEquals(expectedAppliance, actualAppliance);
 
-        verify(mockApplianceRepo).findById(1L);
-        verify(mockApplianceRepo).save(expectedAppliance);
+        InOrder order = inOrder(mockApplianceRepo);
+        order.verify(mockApplianceRepo).findById(1L);
+        order.verify(mockApplianceRepo).save(expectedAppliance);
         verifyNoMoreInteractions(mockApplianceRepo);
     }
 

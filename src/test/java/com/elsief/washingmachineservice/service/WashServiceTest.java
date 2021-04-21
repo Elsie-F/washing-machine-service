@@ -9,6 +9,7 @@ import javassist.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -88,8 +89,9 @@ public class WashServiceTest {
         Wash actualWash = washService.setWashStatus(1L, WashStatus.RUNNING);
         assertEquals(expectedWash, actualWash);
 
-        verify(mockWashRepo).findById(1L);
-        verify(mockWashRepo).save(expectedWash);
+        InOrder order = inOrder(mockWashRepo);
+        order.verify(mockWashRepo).findById(1L);
+        order.verify(mockWashRepo).save(expectedWash);
         verifyNoMoreInteractions(mockWashRepo);
     }
 
@@ -115,8 +117,9 @@ public class WashServiceTest {
         Wash actualWash = washService.setWashFinishTime(1L, LocalDateTime.parse("2021-04-21 15:30", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         assertEquals(expectedWash, actualWash);
 
-        verify(mockWashRepo).findById(1L);
-        verify(mockWashRepo).save(expectedWash);
+        InOrder order = inOrder(mockWashRepo);
+        order.verify(mockWashRepo).findById(1L);
+        order.verify(mockWashRepo).save(expectedWash);
         verifyNoMoreInteractions(mockWashRepo);
     }
 
