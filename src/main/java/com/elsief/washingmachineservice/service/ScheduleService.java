@@ -39,6 +39,10 @@ public class ScheduleService {
         scheduler.shutdown();
     }
 
+    /**
+     * Schedule start wash job
+     * @param wash - a wash that needs a start job to be scheduled
+     */
     public void scheduleStart(Wash wash) {
         long applianceId = wash.getAppliance().getId();
         long washId = wash.getId();
@@ -62,6 +66,10 @@ public class ScheduleService {
 
     }
 
+    /**
+     * Schedule finish wash job
+     * @param wash - a wash that needs a finish job to be scheduled
+     */
     public void scheduleFinish(Wash wash) {
         long applianceId = wash.getAppliance().getId();
         long washId = wash.getId();
@@ -86,6 +94,10 @@ public class ScheduleService {
 
     }
 
+    /**
+     * Delete start wash job and reschedule finish wash job for a wash to be canceled or stopped immeditely
+     * @param washId - a wash to be canceled
+     */
     public void cancelWash(long washId) {
         try {
             scheduler.deleteJob(JobKey.jobKey("wash" + washId, "start"));

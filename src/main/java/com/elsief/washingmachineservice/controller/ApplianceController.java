@@ -20,6 +20,10 @@ public class ApplianceController {
         this.applianceRepo = applianceRepo;
     }
 
+    /**
+     * Get all appliances
+     * @return a list of appliances
+     */
     @GetMapping("/all")
     public List<Appliance> findAll() {
         return applianceRepo.findAll();

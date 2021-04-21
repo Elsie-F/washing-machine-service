@@ -27,6 +27,13 @@ public class StartWashJob implements Job {
     public StartWashJob() {
     }
 
+    /**
+     * Execute start job:
+     * if wash is waiting and corresponding appliance is idle, mark wash and appliance as running,
+     * if wash is waiting and corresponding appliance is running, mark wash as canceled
+     * @param jobExecutionContext - job execution context
+     * @throws JobExecutionException
+     */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         try {

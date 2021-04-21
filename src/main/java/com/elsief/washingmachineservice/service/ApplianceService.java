@@ -18,10 +18,22 @@ public class ApplianceService {
         this.applianceRepo = applianceRepo;
     }
 
+    /**
+     * Find an appliance by id
+     * @param applianceId - id of an appliance
+     * @return appliance or Optional.empty if appliance is not found
+     */
     public Optional<Appliance> findById(long applianceId) {
         return applianceRepo.findById(applianceId);
     }
 
+    /**
+     * Update appliance status to a specified value
+     * @param applianceId - id of an appliance to be updated
+     * @param status - new value of appliance status
+     * @return updated appliance
+     * @throws NotFoundException if appliance with this id is not found
+     */
     public Appliance setApplianceStatus(long applianceId, ApplianceStatus status) throws NotFoundException {
         Optional<Appliance> appliance = applianceRepo.findById(applianceId);
         if (appliance.isEmpty()) {
@@ -31,6 +43,12 @@ public class ApplianceService {
         return applianceRepo.save(appliance.get());
     }
 
+    /**
+     * Get status of an appliance
+     * @param applianceId - id of an appliance
+     * @return status of an appliance
+     * @throws NotFoundException if appliance with this id is not found
+     */
     public ApplianceStatus getApplianceStatus(long applianceId) throws NotFoundException {
         Optional<Appliance> appliance = applianceRepo.findById(applianceId);
         if (appliance.isEmpty()) {

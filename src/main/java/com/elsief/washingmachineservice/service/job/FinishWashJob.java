@@ -31,6 +31,14 @@ public class FinishWashJob implements Job {
     public FinishWashJob() {
     }
 
+    /**
+     * Execute finish job:
+     * if wash is running, mark it as finished, set finish time and mark appliance as idle,
+     * if wash is running and canceled, mark it as canceled, set finish time and mark appliance as idle,
+     * if wash is waiting and canceled, mark it as canceled
+     * @param jobExecutionContext - job execution context
+     * @throws JobExecutionException
+     */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         try {

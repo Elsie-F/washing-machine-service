@@ -20,6 +20,10 @@ public class ProgramController {
         this.programRepo = programRepo;
     }
 
+    /**
+     * Get all programs
+     * @return a list of programs
+     */
     @GetMapping("/all")
     public List<Program> findAll() {
         return programRepo.findAll();

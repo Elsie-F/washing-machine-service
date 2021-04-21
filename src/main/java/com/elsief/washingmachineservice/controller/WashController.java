@@ -35,11 +35,20 @@ public class WashController {
         this.scheduleService = scheduleService;
     }
 
+    /**
+     * Get all washes
+     * @return a list of washes
+     */
     @GetMapping("/all")
     public List<Wash> findAll() {
         return washRepo.findAll();
     }
 
+    /**
+     * Create a new wash and schedule its start and finish
+     * @param request - request to create wash
+     * @return response with wash id, HTTP status and message
+     */
     @PostMapping
     public CreateWashResponse saveWash(@RequestBody CreateWashRequest request) {
         Optional<Appliance> appliance = applianceService.findById(request.getApplianceId());
@@ -62,6 +71,11 @@ public class WashController {
         return CreateWashResponse.builder().washId(createdWash.getId()).httpStatus(HttpStatus.CREATED).message("Wash successfully created").build();
     }
 
+    /**
+     * Cancel wash
+     * @param washId - id of a wash to be canceled
+     * @return response with wash id, HTTP status and message
+     */
     @PostMapping("/cancel/{washId}")
     public CancelWashResponse cancelWash(@PathVariable long washId) {
         Optional<Wash> wash = washService.findById(washId);

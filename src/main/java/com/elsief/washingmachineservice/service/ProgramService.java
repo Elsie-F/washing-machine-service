@@ -16,6 +16,11 @@ public class ProgramService {
         this.programRepo = programRepo;
     }
 
+    /**
+     * Find a program by id
+     * @param programId - id of a program to be found
+     * @return program or Optional.empty if program is not found
+     */
     public Optional<Program> findById(long programId) {
         return programRepo.findById(programId);
     }
